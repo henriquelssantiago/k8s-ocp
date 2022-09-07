@@ -112,7 +112,10 @@ Referência: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 A maneira de fazer o binding de um PV com um Pod é utilizando Persistent Volume Claims. Com o PVC, conseguimos requisitar os recursos que o PV disponibiliza. É possível, por exemplo, solicitar somente leitura a um determinado PV, ou que somente um pod por vez possa acessar esse PV.
 
 Referência: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
-Storage Classes
+
+<a name="storageclasses"></a>
+### Storage Classes ###
+
 Com StorageClass conseguimos provisionar dinamicamente um disco em um Cloud Provider.
 
 Referência: https://kubernetes.io/docs/concepts/storage/storage-classes/
