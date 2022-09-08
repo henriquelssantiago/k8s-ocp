@@ -13,14 +13,16 @@
 - [ Persistent Volume ](#persistentvolume)
 - [ Persistent Volume Claims ](#persistentvolumeclaims)
 - [ Storage Classes ](#storageclasses)
-- [ Operators ](#operators)
-- [ Deployment Configs (OCP) ](#deploymentconfigs)
-- [ ReplicationControllers ](#replicationcontrollers)
+- [ Iniciando no OpenShift ](#iniciandonoopenShift)
+- [ Replica set e Replication controller ](#replicasetereplicationcontroller)
+- [ Deployment e DeploymentConfig ](#deploymentedeploymentconfig)
 - [ Routes ](#routes)
 - [ Network Policies ](#networkpolicies)
-- [ Build Configs ](#buildconfigs)
+- [ Build e BuildConfigs ](#buildebuildconfigs)
 - [ ImageStreams ](#imagestreams)
 - [ Resource Quotas ](#resourcequotas)
+- [ Operators ](#operators)
+
 
 <a name="introducao"></a>
 ### Introdução ###
@@ -120,32 +122,144 @@ Com StorageClass conseguimos provisionar dinamicamente um disco em um Cloud Prov
 
 Referência: https://kubernetes.io/docs/concepts/storage/storage-classes/
 
-<a name="replicationcontrollers"></a>
-### ReplicationControllers ###
+---
 
-<a name="deploymentconfigs"></a>
-### Deployment Configs ###
+<a name="iniciandonoopenShift"></a>
+### Iniciando no OpenShift ###
 
-<a name="operators"></a>
-### Operators ###
+“O [Red Hat OpenShift](https://www.redhat.com/pt-br/technologies/cloud-computing/openshift) é uma plataforma de aplicações em containers Kubernetes pronta para empresas…”
+
+Se chegamos até aqui, já temos uma boa base de virtualização, containers e Kubernetes. É facilmente perceptível a facilidade que o Kubernetes nos dá na gerência do nosso cluster, mas também a complexidade do mesmo, e ainda pior caso precisemos gerenciar vários clusters. Diversos arquivos e arquivos extensos. Pods, Services, ReplicaSets, Deployments, ConfigMaps, Secrets… O OpenShift nos trás justamente uma facilidade na gerência do nosso cluster Kubernetes criando uma interface gráfica e entregando ainda mais features que o vanilla Kubernetes não nos entrega. Ainda melhor, facilita a gerência de clusters Kubernetes.
+
+Documentação: https://docs.openshift.com/container-platform/4.11/welcome/index.html
+
+Essa é a nossa primeira impressão sobre o OpenShift
+
+A primeira observação que podemos fazer é que basicamente a configuração começa com um Project. Dessa maneira conseguimos gerenciar os recursos do cluster e separar responsabilidades por usuário ou grupos de usuários, seja desenvolvedor ou administradores do OpenShift.
+
+![Primeira impresão](images/primeira-impressao.png)
+
+_Esse ambiente da imagem é um ambiente de sandbox que a Red Hat fornece por 30 dias apenas para testes._
+
+Nesse menu lateral temos acesso as features da ferramenta.
+
+Em Workloads encontramos alguns nomes familiares como Pods.
+
+![Pods menu](images/pods-menu.png)
+
+Entrando no menu de Pods, nos deparamos com essa interface e com o botão **Create Pod**
+
+![Pods crete pod button](images/pods-create-pod-button.png)
+
+Clicando em Create Pod, a ferramenta nos disponibiliza um editor de texto com um template pré-configurado de um pod com um container de apache server de exemplo.
+
+![Pods YAML OCP Example](images/pods-yaml-ocp-example.png)
+
+Devemos editar essa declaração de pod com o conteúdo do nosso pod. Por exemplo, caso queiramos criar um pod a partir de uma imagem de alguma api nossa hospedada no DockerHub:
+
+![Pods YAML](images/pods-yaml.png)
+
+Clicando em Create, a listagem que antes não tinha nada, agora tem o nosso pod.
+
+![Pods Listagem](images/pods-listagem.png)
+
+Interessante essa listagem. Conseguimos ver o nome do pod, o seu status e mais outras informações.
+
+No menu do lado direito é possível editar o nosso Pod ou até mesmo deletá-lo.
+
+![Pods Listagem Ações](images/pods-listagem-acoes.png)
+
+Referência:
+https://docs.openshift.com/container-platform/4.11/welcome/index.html
+
+<a name="replicasetereplicationcontroller"></a>
+### Replica set e Replication controller ###
+
+Replication Controller seria uma versão anterior a Replica set, ambos resolvem o mesmo problema de replicar pods e garantir a quantidade de réplicas desejadas a depender do cenário. Existem apenas algumas diferenças no arquivo de definição, mas o funcionamento é o mesmo.
+
+Se analisarmos o exemplo proposto pelo próprio OpenShift, podemos perceber que a diferença da declaração é apenas em cima do selector.
+
+Referência: https://docs.openshift.com/container-platform/3.11/architecture/core_concepts/deployments.html
+
+<a name="deploymentedeploymentconfig"></a>
+### Deployment e DeploymentConfig ###
+
+Assim como ReplicaSet e RepplicationController, Deployment e DeploymentConfig tem a mesma função. Ambos criam ReplicaSet para gerenciar a quantidade de réplicas dos pods com o histórico do que acontece no ambiente. A diferença é que DeploymentConfig trás um adicional que são triggers. Por exemplo, atualizar a versão do Deployment com base em uma nova versão da imagem do container utilizado.
+
+Nesse caso, no arquivo de definição a história se repete quando se fala em selectors.
+
+Referência: https://docs.openshift.com/container-platform/3.11/architecture/core_concepts/deployments.html
 
 <a name="routes"></a>
 ### Routes ###
 
+Routes são um caminho para expôr externamente um service fornecendo um hostname acessível. É importante salientar que qualquer acesso de fora do OCP só é possível a partir de um route.
+
+Referência: https://docs.openshift.com/container-platform/3.11/architecture/networking/routes.html
+
 <a name="networkpolicies"></a>
 ### Network Policies ###
 
-<a name="buildconfigs"></a>
-### Build Configs ###
+Um cluster complexo vai trazer uma série de pods que talvez não fosse interessante que pudessem se comunicar. Acontece que por padrão, todos os pods conseguem se comunicar entre si dentro de um projeto por meio de seus endpoints. Caso haja a necessidade de limitar o acesso a determinado pod, é só criar uma Network Policy e como tudo no K8s é só utilizar selectors.
+
+Exemplo:
+
+![Network Policy](images/network-policy.png)
+
+Desse modo, limitamos o acesso aos pods declarados com o label role=frontend a somente conexões TCP nas portas 80 e 443.
+
+Referência: https://docs.openshift.com/container-platform/4.11/networking/network_policy/about-network-policy.html#about-network-policy
+
+<a name="buildebuildconfigs"></a>
+### Build e BuildConfigs ###
+
+O Build é o processo de criação de uma imagem e o BuildConfig é a definição de como esse build deve acontecer.
+
+Por exemplo:
+
+![Build Config](images/build-config.png)
+
+Esse BuildConfig define que deve acontecer um Build sempre que houver alguma alteração no repositório ou quando houver alguma mudança na imagem. E o resultado desse Build irá criar uma tag no ImageStream.
+
+Referência: https://docs.openshift.com/container-platform/4.7/cicd/builds/understanding-buildconfigs.html
 
 <a name="imagestreams"></a>
 ### ImageStreams ###
 
+ImageStreams nada mais são do que referências a imagens, seja no registry interno do OCP ou em repositórios externos.
+
+No caso do exemplo acima, a imagem gerada a partir do build em questão irá gerar uma tag origin-ruby-smaple:latest no ImageStream. Não é gerada uma imagem e sim somente uma referência a uma imagem. Isso é útil quando determinada tag está sendo utilizada em diversos lugares e há uma mudança na imagem. Sem ImageStreams, seria necessário alterar a versão da imagem onde a mesma estivesse sendo utilizada.
+
+Referência: https://docs.openshift.com/container-platform/4.7/rest_api/image_apis/imagestream-image-openshift-io-v1.html
+
 <a name="resourcequotas"></a>
 ### Resource Quotas ###
 
-NERD ALERT!
+Resource Quotas são limitações que podemos criar por project no nosso cluster. Digamos que temos 3 projects e precisamos que o primeiro não exceda  20% do consumo de cpu. Podemos fazer essa limitação utilizando Resource Quotas. Não só recurso computacional como também a quantidade de réplicas que podemos criar ou a quantidade de pods e etc.
 
-Fato curioso!
+Por exemplo:
+
+![Resource Quotas](images/resource-quotas.png)
+
+- O limite de pods a serem criados é 4
+- Cada container terá disponível sempre que precisar 1 core, 1 giga de ram e 2 gigas de storage.
+- E por fim, cada container poderá no máximo consumir 2 cores, 2 gigas de ram e 4 gigas de storage.
+
+Referência: https://docs.openshift.com/container-platform/4.7/applications/quotas/quotas-setting-per-project.html
+
+<a name="operators"></a>
+### Operators ###
+
+Operators são parecidos com plugins. Criados pela própria RedHat, por provedores de software ou até mesmo pela comunidade.
+
+Eles podem ser encontrados no [OperatorHub.io.](https://operatorhub.io)
+
+A RedHat define Operators como pedaços de software que facilitam a complexidade operacional de executar outros softwares. Podemos analisar o [Elasticsearch (ECK) Operator](https://operatorhub.io/operator/elastic-cloud-eck) que facilita o deployment, provisionamento, gerenciamento e orquestração de vários softwares da [ELK](https://www.elastic.co/pt/what-is/elk-stack).
+
+![ECK Operator](/images/operators-eck.png)
+
+---
+
+Fato curioso ( NERD ALERT ) !!!
 
 O nome Kubernetes deriva de uma palavra grega para Timoneiro, o responsável por conduzir um navio. Eis o motivo da logo ser um timão. Esse timão tem 7 lados como uma referência a personagem Sete da Série Star Trek. A mesma era uma Borg, e Borg ou Google Borg é um gerenciador de cluster onde muitos dos principais contribuintes do k8s trabalharam.
