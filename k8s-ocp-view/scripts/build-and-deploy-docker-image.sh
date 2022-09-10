@@ -6,9 +6,9 @@ echo "Iniciando build da imagem $imageName"
 
 cd .. || exit
 
-#npm install
-#
-#ng build -c production
+npm install
+
+ng build -c production
 
 docker build -t $imageName . || exit
 

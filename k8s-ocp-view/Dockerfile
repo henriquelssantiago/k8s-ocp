@@ -16,10 +16,18 @@ COPY . .
 RUN npm run build-prod
 
 # production environment
-FROM nginx:stable-alpine
+FROM nginxinc/nginx-unprivileged
 
 COPY --from=build_stage /usr/src/app/dist/ /usr/share/nginx/html
 
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
+
+#FROM nginxinc/nginx-unprivileged
+#
+#COPY /dist/k8s-ocp-view /usr/share/nginx/html
+#
+#EXPOSE 80
+#
+#CMD ["nginx", "-g", "daemon off;"]
