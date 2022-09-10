@@ -1,0 +1,28 @@
+<h1>MOBIT Brasil</h1>
+<h2>Kubernetes & OCP Example</h2>
+
+<form (submit)="save()" [formGroup]="form">
+  <p>
+    <label for="plate">Placa: </label>
+    <input id="plate" type="text" formControlName="plate">
+
+    <label for="speed">Velocidade: </label>
+    <input id="speed" type="text" formControlName="speed">
+  </p>
+
+  <p>
+    <button [disabled]="form.invalid">Salvar</button>
+  </p>
+</form>
+
+<table>
+  <tr *ngFor="let p of passages">
+    <td>{{ p.id }}</td>
+    <td>{{ p.plate }}</td>
+    <td>{{ p.speed }}</td>
+  </tr>
+</table>
+
+<p>
+  <button (click)="loadPassages()">Carregar</button>
+</p>
