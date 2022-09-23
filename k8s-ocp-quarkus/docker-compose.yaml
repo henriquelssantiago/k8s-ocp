@@ -1,0 +1,6 @@
+version: '3.1'
+services:
+  k8s-ocp-quarkus:
+    image: hlssmobit/k8s-ocp-quarkus
+    ports:
+      - 8180:8180

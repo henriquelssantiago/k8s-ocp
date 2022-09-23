@@ -1,5 +1,5 @@
 export interface Passage {
-  id?: string;
+  id?: number;
   plate: string;
   speed: number;
 }

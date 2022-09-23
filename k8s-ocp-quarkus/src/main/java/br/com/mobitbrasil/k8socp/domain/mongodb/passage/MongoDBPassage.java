@@ -1,4 +1,4 @@
-package br.com.mobitbrasil.k8socp;
+package br.com.mobitbrasil.k8socp.domain.mongodb.passage;
 
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import lombok.Getter;
@@ -10,8 +10,15 @@ import org.bson.types.ObjectId;
 @Setter
 @NoArgsConstructor
 @MongoEntity(collection = "passages")
-public class Passage {
+public class MongoDBPassage {
     private ObjectId id;
     private String plate;
     private Integer speed;
+    private Integer systemId;
+
+    public MongoDBPassage(String plate, Integer speed,Integer systemId) {
+        this.plate = plate;
+        this.speed = speed;
+        this.systemId = systemId;
+    }
 }

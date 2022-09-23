@@ -46,4 +46,13 @@ export class AppComponent implements OnInit {
         this.form.reset();
       });
   }
+
+  delete(passage: Passage): void {
+    if (passage.id) {
+      this.passagesService.deleteBy(passage.id)
+        .subscribe(() => {
+          this.passages = this.passages.filter(p => p.id !== passage.id);
+        });
+    }
+  }
 }

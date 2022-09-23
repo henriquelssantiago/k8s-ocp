@@ -13,10 +13,14 @@ export class PassagesService {
   }
 
   findAll(): Observable<Passage[]> {
-    return this.http.get<Passage[]>(QUARKUS_PASSAGES_PATH);
+    return this.http.get<Passage[]>(SPRING_PASSAGES_PATH);
   }
 
   save(passage: Passage): Observable<Passage> {
     return this.http.post<Passage>(SPRING_PASSAGES_PATH, passage);
+  }
+
+  deleteBy(id: number): Observable<void> {
+    return this.http.delete<void>(`${QUARKUS_PASSAGES_PATH}/${id}`);
   }
 }

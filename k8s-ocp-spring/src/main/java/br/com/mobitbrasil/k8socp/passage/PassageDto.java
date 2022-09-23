@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 @Getter
 @RequiredArgsConstructor
 public class PassageDto {
-    private final String id;
+    private final Integer id;
     private final String plate;
     private final Integer speed;
 

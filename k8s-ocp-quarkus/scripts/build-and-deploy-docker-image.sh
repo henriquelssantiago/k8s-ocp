@@ -1,6 +1,6 @@
 #!/bin/sh
 
-imageName=hlssmobit/k8s-ocp-spring
+imageName=hlssmobit/k8s-ocp-quarkus
 
 cd .. || exit
 

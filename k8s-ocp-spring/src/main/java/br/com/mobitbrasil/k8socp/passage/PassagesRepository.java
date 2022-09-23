@@ -1,6 +1,6 @@
 package br.com.mobitbrasil.k8socp.passage;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PassagesRepository extends MongoRepository<Passage, String> {
+public interface PassagesRepository extends JpaRepository<Passage, String> {
 }

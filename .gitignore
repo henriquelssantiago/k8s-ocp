@@ -26,3 +26,7 @@ k8s-ocp.iml
 .classpath
 .project
 .settings/
+
+# DB VOLUMES
+mongodbdata
+postgresdbdata
